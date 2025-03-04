@@ -1,0 +1,83 @@
+---
+title: MediaSpace interfaces
+description: Extending or customizing MediaSpace using interfaces
+---
+
+MediaSpace offers extending or modifying the default behavior by exposing interfaces that modules can implement.
+
+There are 2 main types of interfaces:
+
+-   **Core interfaces**: a core interface is an interface that is declared at the "core" level, i.e., not as part of a module, and can be found in the `library/Kms/Interface` directory.
+
+    -   Example: `Kms_Interface_Functional_Media_Title_GetButtons` is an interface, located in `library/Kms/Interface/Functional/Media/Title/GetButtons.php`, which allows modules implementing this interface to add React components that will be rendered as part of the media page's title.
+
+-   **Module interfaces**: a module interface is an interface that is declared by a module, and allows other modules to interact with it. In most cases, you won't have to declare a module interface, only implement an existing one.
+
+    -   Example: `Channelthemingui_Model_Interface_ChannelTabComponents` is a module interface that is declared by a module `channelthemingui`. This interface allows other modules to add/modify tabs to a channel page.
+
+:::note
+Module interfaces were introduced in KMS in 2017. Until then, all interfaces were declared globally as a core interface, which means that there still interfaces in use today that would ideally be a module interface.
+:::
+
+## Implementing a module interface
+
+Implementing a module interface might seem overly complicated, but there's a reason for it, which will be explained.
+
+### 1. Implementing the `Kms_Interface_Module_Interface` interface
+
+First, in order for KMS to know that your module intends to implement a module, you must implement the `Kms_Interface_Module_Interface` interface:
+
+```diff lang="php"
+- class Mymodule_Model_Mymodule extends Kms_Module_BaseModel
++ class Mymodule_Model_Mymodule extends Kms_Module_BaseModel implements Kms_Interface_Module_Interface
+{}
+```
+
+This interface requires to implement 2 methods:
+
+1. `getInterfacesImplemented`, in which you declare a map of the module interface name you're implementing and the class that is actually implementing the interface.
+2. `getInterfaceImplementingObject`: this is a "factory" method that returns the class instance that implements the interface.
+
+Example:
+
+```php
+# mymodule/models/SomeImplementation.php
+class Mymodule_Model_Mymodule extends Kms_Module_BaseModel implements Kms_Interface_Module_Interface
+{
+    private $moduleInterfaceImplementations = [
+        'Somemodule_Interface_Someinterface' => Mymodule_Model_Someimplementation::class,
+        'Someothermodule_Interface_Someotherinterface' => Mymodule_Model_Someotherimplementation::class,
+    ];
+
+    public function getInterfacesImplemented()
+    {
+        return array_keys($this->moduleInterfaceImplementations);
+    }
+
+    public function getInterfaceImplementingObject($interfaceName)
+    {
+        $implementingClassName = $this->moduleInterfaceImplementations[$interfaceName];
+        return new $implementingClassName();
+    }
+}
+```
+
+If you look closely, you will notice that the `$moduleInterfaceImplementations` array keys (which represent the interfaces that you're implementing) are strings and not class references. This is important because there's no guarantee that a class/interface will be loaded at runtime.
+In a case you're implementing n custom module (core or otherwise), the code you're trying to reference might not be even loaded, because the module was not made available on the instance you're running (on a SaaS environment). This will cause PHP to throw a `Class not fount` fatal error, which will crash the whole application.
+
+Conversely, you can (and should, for better readability and for syntax highlighting) use class reference for the classes that implement the module interface. This is okay because this code only runs when your module is available & enabled, which means that these classes are guaranteed to exist and be auto-loaded.
+
+### 2. Creating a class that implements the interface
+
+Now that you've declared which class implements which interface, it's time to create the implementing class:
+
+```php
+# mymodule/models/SomeImplementation.php
+class Mymodule_Model_Someimplementation implements Somemodule_Interface_Someinterface
+{
+    public function someInterfaceImplementation(...): ...
+    {
+        // code goes here
+    }
+}
+```
