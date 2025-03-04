@@ -4,6 +4,8 @@ import starlight from "@astrojs/starlight";
 
 // https://astro.build/config
 export default defineConfig({
+    site: "https://kaltura-ps.github.io",
+    base: "/misc-kms-documentation",
     integrations: [
         starlight({
             title: "MediaSpace Dev Documentation",
