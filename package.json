@@ -2,6 +2,7 @@
     "name": "kms-documentation",
     "type": "module",
     "version": "0.0.1",
+    "repository": "https://github.com/Kaltura-PS/misc-kms-documentation",
     "scripts": {
         "dev": "astro dev",
         "start": "astro dev",
