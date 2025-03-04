@@ -1,0 +1,81 @@
+---
+title: Getting Started
+---
+
+In this page, we will install the MediaSpace CLI and generate basic module code.
+
+## Prerequisites
+
+-   A local KMS (Kaltura MediaSpace) installation.
+-   A local copy of the `mediaspace-react-components` repository.
+-   Access to Kaltura's `npm` registry (please contact your Kaltura representative).
+
+## Creating a new module from template
+
+### Install the KMS CLI
+
+KMS CLI is a command line tool that allows you to run certain tasks from the command line instead of doing them manually or via KMS' UI.
+
+1. Open the terminal.
+2. Navigate to `mediaspace` directory.
+3. Install Composer dependencies by running `composer install`.
+4. Run `chmod +x mediaspace` to make the binary file executable.
+
+### Create the module
+
+From the `mediaspace` directory, run `mediaspace make:module -c <module-name>`, where `<module-name>` is the name of your module.
+
+This will create a new directory in `mediaspace/modulesCustom/core` which includes the minimum code for a working module.
+
+:::note
+MediaSpace supports 3 kinds of modules:
+
+1. Core modules, which reside in the `modules` directory. These modules are available for all customers.
+2. Custom core modules, which reside in the `modulesCustom/core` directory, and are part of MediaSpace's codebase. On a SaaS installation,
+   these modules are not available to all customers, and can be turned on only via a KMS SaaS administrator.
+3. Custom PS (Professional Services) / Integration Partner modules, which reside in the `modulesCustom/contrib` directory.
+   Each module is managed in its own git repository. On a SaaS installation, such modules are deployed separately and are turned on via a
+   KMS SaaS administrator.
+
+Currently, the CLI only supports creating core & custom core modules. But since a module's basic structure is the same for all module types,
+you can simply move the directory from the `modulesCustom/core` to `modulesCustom/contrib`.
+:::
+
+## Create a design-system (DS) compatible component
+
+In this section, we will install the React-Components CLI tool that will allow us to create a new React component that can be used in
+MediaSpace.
+
+### Install MediaSpace React-Components CLI tool
+
+1. Navigate to `mediaspace-react-component` directory.
+2. If you're using [`nvm`, or Node Version Manager](https://github.com/nvm-sh/nvm) (recommended), run `nvm use` to install the supported Node
+   & `npm` versions.
+3. Run `npm install -g` to install the CLI tool globally, which will be accessible via the `mrc` (short for MediaSpace React Components)
+   command.
+
+### Generating a React application
+
+1. Navigate to your module's \*root directory.
+2. Run `mrc ps:project <module-name>`. This command will create a directory called `app` and will initialize a new project there.
+
+:::note
+
+\* Non-core modules, given that they're not part of the `mediaspace` codebase, and given that there's a need to be able to have code /
+documentation that is not part of the module's deployment, must have the following structure:
+
+```
+module-mymodule      # this is the name of the repo that hosts the `mymodule` module
+    mymodule/
+        assets/
+        controllers/
+        models/
+        views/
+        admin.ini
+        default.ini
+        module.info
+    README.md
+    # other directories, such as `app`
+```
+
+:::
