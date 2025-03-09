@@ -1,6 +1,9 @@
 ---
 title: Getting Started
+description: Hi
 ---
+
+import { Aside } from "@astrojs/starlight/components";
 
 In this page, we will install the MediaSpace CLI and generate basic module code.
 
@@ -27,7 +30,7 @@ From the `mediaspace` directory, run `mediaspace make:module -c <module-name>`, 
 
 This will create a new directory in `mediaspace/modulesCustom/core` which includes the minimum code for a working module.
 
-:::note
+<Aside type="note" title="Info">
 MediaSpace supports 3 kinds of modules:
 
 1. Core modules, which reside in the `modules` directory. These modules are available for all customers.
@@ -39,7 +42,8 @@ MediaSpace supports 3 kinds of modules:
 
 Currently, the CLI only supports creating core & custom core modules. But since a module's basic structure is the same for all module types,
 you can simply move the directory from the `modulesCustom/core` to `modulesCustom/contrib`.
-:::
+
+</Aside>
 
 ## Create a design-system (DS) compatible component
 

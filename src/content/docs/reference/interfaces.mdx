@@ -3,6 +3,8 @@ title: MediaSpace interfaces
 description: Extending or customizing MediaSpace using interfaces
 ---
 
+import { Aside } from "@astrojs/starlight/components";
+
 MediaSpace offers extending or modifying the default behavior by exposing interfaces that modules can implement.
 
 There are 2 main types of interfaces:
@@ -15,9 +17,10 @@ There are 2 main types of interfaces:
 
     -   Example: `Channelthemingui_Model_Interface_ChannelTabComponents` is a module interface that is declared by a module `channelthemingui`. This interface allows other modules to add/modify tabs to a channel page.
 
-:::note
-Module interfaces were introduced in KMS in 2017. Until then, all interfaces were declared globally as a core interface, which means that there still interfaces in use today that would ideally be a module interface.
-:::
+<Aside title="Info" type="tip">
+    Module interfaces were introduced in KMS in 2017. Until then, all interfaces were declared globally as a core
+    interface, which means that there still interfaces in use today that would ideally be a module interface.
+</Aside>
 
 ## Implementing a module interface
 
